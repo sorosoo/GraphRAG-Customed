@@ -119,7 +119,7 @@ tenacity==8.5.0
 textual==0.70.0
 threadpoolctl==3.5.0
 tiktoken==0.7.0
-tokenizers==0.15.2
+tokenizers==0.19.1
 toolz==0.12.1
 tqdm==4.66.4
 transformers==4.36.2

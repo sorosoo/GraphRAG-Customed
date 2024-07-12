@@ -88,6 +88,7 @@ class CustomCompletionLLM(BaseLLM[CompletionInput, CompletionOutput]):
         args = get_completion_llm_args(
             kwargs.get("model_parameters"), self.configuration
         )
+        args.update(self.configuration.raw_config)
         executor = llm_executors.get(args['model'])
         return executor(
             input=input,

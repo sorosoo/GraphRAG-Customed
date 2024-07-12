@@ -3,7 +3,7 @@ encoding_model: cl100k_base
 skip_workflows: []
 llm:
   api_key: ${GRAPHRAG_API_KEY}
-  type: chatglm3_6b # or azure_openai_chat
+  type: custom # or azure_openai_chat
   model: chatglm3_6b
   model_path: /home/ws_0802/git/ChatGLM3-6B/chatglm3-6b # LLM pretrained path
   model_supports_json: true # recommended if this is available for your model.

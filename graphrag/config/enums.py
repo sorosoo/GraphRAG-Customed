@@ -102,13 +102,12 @@ class LLMType(str, Enum):
     # Raw Completion
     OpenAI = "openai"
     AzureOpenAI = "azure_openai"
+    # 自定义的模型类型
+    Custom = 'custom'
 
     # Chat Completion
     OpenAIChat = "openai_chat"
     AzureOpenAIChat = "azure_openai_chat"
-
-    # 智能院语言模型
-    ChatGLM36B = 'chatglm3_6b'
 
     # Debug
     StaticResponse = "static_response"

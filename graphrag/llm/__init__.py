@@ -23,7 +23,7 @@ from .openai import (
     create_openai_client,
     create_openai_completion_llm,
     create_openai_embedding_llm,
-    create_chatglm3_6b_llm
+    create_custom_llm,
 )
 from .types import (
     LLM,
@@ -87,7 +87,7 @@ __all__ = [
     "create_openai_client",
     "create_openai_completion_llm",
     "create_openai_embedding_llm",
-    "create_chatglm3_6b_llm",
+    "create_custom_llm",
     # Limiters
     "create_tpm_rpm_limiters",
 ]

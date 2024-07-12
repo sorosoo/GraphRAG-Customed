@@ -8,7 +8,7 @@ from .factories import (
     create_openai_chat_llm,
     create_openai_completion_llm,
     create_openai_embedding_llm,
-    create_chatglm3_6b_llm,
+    create_custom_llm,
 )
 from .openai_chat_llm import OpenAIChatLLM
 from .openai_completion_llm import OpenAICompletionLLM
@@ -26,5 +26,5 @@ __all__ = [
     "create_openai_client",
     "create_openai_completion_llm",
     "create_openai_embedding_llm",
-    "create_chatglm3_6b_llm",
+    "create_custom_llm",
 ]

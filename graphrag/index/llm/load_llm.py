@@ -22,7 +22,7 @@ from graphrag.llm import (
     create_openai_completion_llm,
     create_openai_embedding_llm,
     create_tpm_rpm_limiters,
-    create_chatglm3_6b_llm,
+    create_custom_llm,
 )
 
 if TYPE_CHECKING:
@@ -186,13 +186,13 @@ def _load_azure_openai_embeddings_llm(
     return _load_openai_embeddings_llm(on_error, cache, config, True)
 
 
-def _load_chatglm3_6b_llm(
+def _load_custom_llm(
         on_error: ErrorHandlerFn,
         cache: LLMCache,
         config: dict[str, Any],
         azure=False,
 ):
-    return _create_chatglm3_6b_llm(
+    return _create_custom_llm(
         OpenAIConfiguration({
             # Set default values
             **_get_base_config(config),
@@ -266,8 +266,8 @@ loaders = {
         "load": _load_static_response,
         "chat": False,
     },
-    LLMType.ChatGLM36B: {
-        'load': _load_chatglm3_6b_llm,
+    LLMType.Custom: {
+        'load': _load_custom_llm,
         "chat": False,
     },
 }
@@ -318,17 +318,17 @@ def _create_openai_embeddings_llm(
     )
 
 
-def _create_chatglm3_6b_llm(
+def _create_custom_llm(
         configuration: OpenAIConfiguration,
         on_error: ErrorHandlerFn,
         cache: LLMCache,
         azure=False, ) -> CompletionLLM:
-    """Create a chatglm3-6b completion llm."""
+    """Create a custom completion llm."""
 
     client = create_openai_client(configuration=configuration, azure=azure)
     limiter = _create_limiter(configuration)
     semaphore = _create_semaphore(configuration)
-    return create_chatglm3_6b_llm(
+    return create_custom_llm(
         client, configuration, cache, limiter, semaphore, on_error=on_error
     )
 

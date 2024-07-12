@@ -16,7 +16,7 @@ from graphrag.llm.types import (
     LLMInvocationFn,
     OnCacheActionFn,
 )
-from .chatglm3_6b_llm import ChatGLM36BLLM
+from .custom_completion_llm import CustomCompletionLLM
 
 from .json_parsing_llm import JsonParsingLLM
 from .openai_chat_llm import OpenAIChatLLM
@@ -103,7 +103,7 @@ def create_openai_embedding_llm(
     return result
 
 
-def create_chatglm3_6b_llm(
+def create_custom_llm(
     client: OpenAIClientTypes,
     config: OpenAIConfiguration,
     cache: LLMCache | None = None,
@@ -114,9 +114,9 @@ def create_chatglm3_6b_llm(
     on_cache_hit: OnCacheActionFn | None = None,
     on_cache_miss: OnCacheActionFn | None = None,
 ) -> CompletionLLM:
-    """Create a ChatGLM3 6B completion LLM."""
+    """Create a custom completion LLM."""
     operation = "completion"
-    result = ChatGLM36BLLM(client, config)
+    result = CustomCompletionLLM(client, config)
     result.on_error(on_error)
     if limiter is not None or semaphore is not None:
         result = _rate_limited(result, config, operation, limiter, semaphore, on_invoke)

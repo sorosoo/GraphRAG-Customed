@@ -90,6 +90,7 @@ def create_graphrag_config(
             deployment_name = (
                 reader.str(Fragment.deployment_name) or base.deployment_name
             )
+            model_path = reader.str(Fragment.model_path) or base.model_path
 
             if api_key is None and not _is_azure(llm_type):
                 raise ApiKeyMissingError
@@ -130,8 +131,7 @@ def create_graphrag_config(
                 sleep_on_rate_limit_recommendation=sleep_on_rate_limit,
                 concurrent_requests=reader.int(Fragment.concurrent_requests)
                 or base.concurrent_requests,
-                model_path=reader.str(Fragment.model_path)
-                or defs.LLM_MODEL_PATH
+                model_path=model_path
             )
 
     def hydrate_embeddings_params(
@@ -150,6 +150,7 @@ def create_graphrag_config(
                 or base.cognitive_services_endpoint
             )
             deployment_name = reader.str(Fragment.deployment_name)
+            model_path = reader.str(Fragment.model_path) or base.model_path
 
             if api_key is None and not _is_azure(api_type):
                 raise ApiKeyMissingError(embedding=True)
@@ -162,6 +163,7 @@ def create_graphrag_config(
             sleep_on_rate_limit = reader.bool(Fragment.sleep_recommendation)
             if sleep_on_rate_limit is None:
                 sleep_on_rate_limit = base.sleep_on_rate_limit_recommendation
+
 
             return LLMParameters(
                 api_key=api_key,
@@ -185,8 +187,7 @@ def create_graphrag_config(
                 sleep_on_rate_limit_recommendation=sleep_on_rate_limit,
                 concurrent_requests=reader.int(Fragment.concurrent_requests)
                 or defs.LLM_CONCURRENT_REQUESTS,
-                model_path=reader.str(Fragment.model_path)
-                or defs.LLM_MODEL_PATH,
+                model_path=model_path,
             )
 
     def hydrate_parallelization_params(

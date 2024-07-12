@@ -11,6 +11,7 @@ llm:
   api_key: ${{GRAPHRAG_API_KEY}}
   type: {defs.LLM_TYPE.value} # or azure_openai_chat
   model: {defs.LLM_MODEL}
+  model_path: {defs.LLM_MODEL_PATH}
   model_supports_json: true # recommended if this is available for your model.
   # max_tokens: {defs.LLM_MAX_TOKENS}
   # request_timeout: {defs.LLM_REQUEST_TIMEOUT}

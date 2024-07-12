@@ -82,4 +82,4 @@ class LLMParameters(BaseModel):
         default=defs.LLM_CONCURRENT_REQUESTS,
     )
     # 智能院LLM模型持久化路径
-    model_path: str = Field(description="The LLM pretrained model path to use.", default=".")
+    model_path: str = Field(description="The LLM pretrained model path to use.", default=defs.LLM_MODEL_PATH)

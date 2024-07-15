@@ -24,6 +24,7 @@ from .openai import (
     create_openai_completion_llm,
     create_openai_embedding_llm,
     create_custom_llm,
+    create_custom_embedding_llm,
 )
 from .types import (
     LLM,
@@ -88,6 +89,7 @@ __all__ = [
     "create_openai_completion_llm",
     "create_openai_embedding_llm",
     "create_custom_llm",
+    "create_custom_embedding_llm",
     # Limiters
     "create_tpm_rpm_limiters",
 ]

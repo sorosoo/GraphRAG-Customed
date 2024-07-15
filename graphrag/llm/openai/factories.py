@@ -17,6 +17,7 @@ from graphrag.llm.types import (
     OnCacheActionFn,
 )
 from .custom_completion_llm import CustomCompletionLLM
+from .custom_embeddings_llm import CustomEmbeddingsLLM
 
 from .json_parsing_llm import JsonParsingLLM
 from .openai_chat_llm import OpenAIChatLLM
@@ -36,15 +37,15 @@ from .utils import (
 
 
 def create_openai_chat_llm(
-    client: OpenAIClientTypes,
-    config: OpenAIConfiguration,
-    cache: LLMCache | None = None,
-    limiter: LLMLimiter | None = None,
-    semaphore: asyncio.Semaphore | None = None,
-    on_invoke: LLMInvocationFn | None = None,
-    on_error: ErrorHandlerFn | None = None,
-    on_cache_hit: OnCacheActionFn | None = None,
-    on_cache_miss: OnCacheActionFn | None = None,
+        client: OpenAIClientTypes,
+        config: OpenAIConfiguration,
+        cache: LLMCache | None = None,
+        limiter: LLMLimiter | None = None,
+        semaphore: asyncio.Semaphore | None = None,
+        on_invoke: LLMInvocationFn | None = None,
+        on_error: ErrorHandlerFn | None = None,
+        on_cache_hit: OnCacheActionFn | None = None,
+        on_cache_miss: OnCacheActionFn | None = None,
 ) -> CompletionLLM:
     """Create an OpenAI chat LLM."""
     operation = "chat"
@@ -60,15 +61,15 @@ def create_openai_chat_llm(
 
 
 def create_openai_completion_llm(
-    client: OpenAIClientTypes,
-    config: OpenAIConfiguration,
-    cache: LLMCache | None = None,
-    limiter: LLMLimiter | None = None,
-    semaphore: asyncio.Semaphore | None = None,
-    on_invoke: LLMInvocationFn | None = None,
-    on_error: ErrorHandlerFn | None = None,
-    on_cache_hit: OnCacheActionFn | None = None,
-    on_cache_miss: OnCacheActionFn | None = None,
+        client: OpenAIClientTypes,
+        config: OpenAIConfiguration,
+        cache: LLMCache | None = None,
+        limiter: LLMLimiter | None = None,
+        semaphore: asyncio.Semaphore | None = None,
+        on_invoke: LLMInvocationFn | None = None,
+        on_error: ErrorHandlerFn | None = None,
+        on_cache_hit: OnCacheActionFn | None = None,
+        on_cache_miss: OnCacheActionFn | None = None,
 ) -> CompletionLLM:
     """Create an OpenAI completion LLM."""
     operation = "completion"
@@ -82,15 +83,15 @@ def create_openai_completion_llm(
 
 
 def create_openai_embedding_llm(
-    client: OpenAIClientTypes,
-    config: OpenAIConfiguration,
-    cache: LLMCache | None = None,
-    limiter: LLMLimiter | None = None,
-    semaphore: asyncio.Semaphore | None = None,
-    on_invoke: LLMInvocationFn | None = None,
-    on_error: ErrorHandlerFn | None = None,
-    on_cache_hit: OnCacheActionFn | None = None,
-    on_cache_miss: OnCacheActionFn | None = None,
+        client: OpenAIClientTypes,
+        config: OpenAIConfiguration,
+        cache: LLMCache | None = None,
+        limiter: LLMLimiter | None = None,
+        semaphore: asyncio.Semaphore | None = None,
+        on_invoke: LLMInvocationFn | None = None,
+        on_error: ErrorHandlerFn | None = None,
+        on_cache_hit: OnCacheActionFn | None = None,
+        on_cache_miss: OnCacheActionFn | None = None,
 ) -> EmbeddingLLM:
     """Create an OpenAI embeddings LLM."""
     operation = "embedding"
@@ -104,15 +105,15 @@ def create_openai_embedding_llm(
 
 
 def create_custom_llm(
-    client: OpenAIClientTypes,
-    config: OpenAIConfiguration,
-    cache: LLMCache | None = None,
-    limiter: LLMLimiter | None = None,
-    semaphore: asyncio.Semaphore | None = None,
-    on_invoke: LLMInvocationFn | None = None,
-    on_error: ErrorHandlerFn | None = None,
-    on_cache_hit: OnCacheActionFn | None = None,
-    on_cache_miss: OnCacheActionFn | None = None,
+        client: OpenAIClientTypes,
+        config: OpenAIConfiguration,
+        cache: LLMCache | None = None,
+        limiter: LLMLimiter | None = None,
+        semaphore: asyncio.Semaphore | None = None,
+        on_invoke: LLMInvocationFn | None = None,
+        on_error: ErrorHandlerFn | None = None,
+        on_cache_hit: OnCacheActionFn | None = None,
+        on_cache_miss: OnCacheActionFn | None = None,
 ) -> CompletionLLM:
     """Create a custom completion LLM."""
     operation = "completion"
@@ -124,13 +125,36 @@ def create_custom_llm(
         result = _cached(result, config, operation, cache, on_cache_hit, on_cache_miss)
     return result
 
+
+def create_custom_embedding_llm(
+        client: OpenAIClientTypes,
+        config: OpenAIConfiguration,
+        cache: LLMCache | None = None,
+        limiter: LLMLimiter | None = None,
+        semaphore: asyncio.Semaphore | None = None,
+        on_invoke: LLMInvocationFn | None = None,
+        on_error: ErrorHandlerFn | None = None,
+        on_cache_hit: OnCacheActionFn | None = None,
+        on_cache_miss: OnCacheActionFn | None = None,
+) -> EmbeddingLLM:
+    """Create a custom embeddings LLM."""
+    operation = "embedding"
+    result = CustomEmbeddingsLLM(client, config)
+    result.on_error(on_error)
+    if limiter is not None or semaphore is not None:
+        result = _rate_limited(result, config, operation, limiter, semaphore, on_invoke)
+    if cache is not None:
+        result = _cached(result, config, operation, cache, on_cache_hit, on_cache_miss)
+    return result
+
+
 def _rate_limited(
-    delegate: LLM,
-    config: OpenAIConfiguration,
-    operation: str,
-    limiter: LLMLimiter | None,
-    semaphore: asyncio.Semaphore | None,
-    on_invoke: LLMInvocationFn | None,
+        delegate: LLM,
+        config: OpenAIConfiguration,
+        operation: str,
+        limiter: LLMLimiter | None,
+        semaphore: asyncio.Semaphore | None,
+        on_invoke: LLMInvocationFn | None,
 ):
     result = RateLimitingLLM(
         delegate,
@@ -148,12 +172,12 @@ def _rate_limited(
 
 
 def _cached(
-    delegate: LLM,
-    config: OpenAIConfiguration,
-    operation: str,
-    cache: LLMCache,
-    on_cache_hit: OnCacheActionFn | None,
-    on_cache_miss: OnCacheActionFn | None,
+        delegate: LLM,
+        config: OpenAIConfiguration,
+        operation: str,
+        cache: LLMCache,
+        on_cache_hit: OnCacheActionFn | None,
+        on_cache_miss: OnCacheActionFn | None,
 ):
     cache_args = get_completion_cache_args(config)
     result = CachingLLM(delegate, cache_args, operation, cache)

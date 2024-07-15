@@ -22,7 +22,7 @@ from graphrag.llm import (
     create_openai_completion_llm,
     create_openai_embedding_llm,
     create_tpm_rpm_limiters,
-    create_custom_llm,
+    create_custom_llm, create_custom_embedding_llm,
 )
 
 if TYPE_CHECKING:
@@ -210,6 +210,26 @@ def _load_custom_llm(
     )
 
 
+def _load_custom_embeddings_llm(
+        on_error: ErrorHandlerFn,
+        cache: LLMCache,
+        config: dict[str, Any],
+        azure=False,
+):
+    return _create_custom_embeddings_llm(
+        OpenAIConfiguration({
+            **_get_base_config(config),
+            "model": config.get(
+                "embeddings_model", config.get("model", "chatglm3_6b")
+            ),
+            "deployment_name": config.get("deployment_name"),
+        }),
+        on_error,
+        cache,
+        azure,
+    )
+
+
 def _get_base_config(config: dict[str, Any]) -> dict[str, Any]:
     api_key = config.get("api_key")
 
@@ -270,6 +290,10 @@ loaders = {
         'load': _load_custom_llm,
         "chat": False,
     },
+    LLMType.CustomEmbedding: {
+        'load': _load_custom_embeddings_llm,
+        'chat': False
+    },
 }
 
 
@@ -329,6 +353,20 @@ def _create_custom_llm(
     limiter = _create_limiter(configuration)
     semaphore = _create_semaphore(configuration)
     return create_custom_llm(
+        client, configuration, cache, limiter, semaphore, on_error=on_error
+    )
+
+
+def _create_custom_embeddings_llm(
+        configuration: OpenAIConfiguration,
+        on_error: ErrorHandlerFn,
+        cache: LLMCache,
+        azure=False, ) -> EmbeddingLLM:
+    """Create a custom embeddings llm."""
+    client = create_openai_client(configuration=configuration, azure=azure)
+    limiter = _create_limiter(configuration)
+    semaphore = _create_semaphore(configuration)
+    return create_custom_embedding_llm(
         client, configuration, cache, limiter, semaphore, on_error=on_error
     )
 

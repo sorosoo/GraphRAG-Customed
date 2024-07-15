@@ -98,6 +98,8 @@ class LLMType(str, Enum):
     # Embeddings
     OpenAIEmbedding = "openai_embedding"
     AzureOpenAIEmbedding = "azure_openai_embedding"
+    # 自定义的词嵌入
+    CustomEmbedding = 'custom_embedding'
 
     # Raw Completion
     OpenAI = "openai"
